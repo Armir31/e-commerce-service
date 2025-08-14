@@ -25,6 +25,9 @@ public class Product {
     private String price;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+    @ManyToOne
+    @JoinColumn(name = "order", nullable = false)
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "category", nullable = false)
