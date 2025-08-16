@@ -38,8 +38,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "payment_method", nullable = false)
     private Payment paymentMethod;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "items", nullable = false)
+    @OneToMany
+    @JoinColumn(name = "order", nullable = false)
     private List<Product> items = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "costumer", nullable = false)

@@ -2,6 +2,7 @@ package al.vibe.nile.service;
 
 import al.vibe.nile.entity.Payment;
 import al.vibe.nile.repository.PaymentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class PaymentService {
         return repository
                 .findById(id)
                 .orElseThrow(
-                        ()->new RuntimeException
+                        ()->new EntityNotFoundException
                                 ("Payment" + id + "not found"));
     }
 }

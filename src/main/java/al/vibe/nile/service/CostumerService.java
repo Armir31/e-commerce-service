@@ -1,5 +1,6 @@
 package al.vibe.nile.service;
 
+import al.vibe.nile.dto.CostumerDto;
 import al.vibe.nile.entity.Costumer;
 import al.vibe.nile.repository.CostumerRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,4 +44,5 @@ public class CostumerService {
     public Costumer update(Costumer costumer) {
         return repository.saveAndFlush(costumer);
     }
+
 }
