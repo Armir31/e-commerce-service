@@ -2,6 +2,7 @@ package al.vibe.nile.service;
 
 import al.vibe.nile.entity.Category;
 import al.vibe.nile.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class CategoryService {
         return repository
                 .findById(id)
                 .orElseThrow(
-                        ()->new RuntimeException
+                        ()->new EntityNotFoundException
                                 ("Category " + id + " not found"));
     }
 }

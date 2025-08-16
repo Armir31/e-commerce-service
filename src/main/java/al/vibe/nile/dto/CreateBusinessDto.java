@@ -1,13 +1,8 @@
 package al.vibe.nile.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
-import java.time.LocalDateTime;
-
-@Data
-public class BusinessDto {
-    private Long id;
+public class CreateBusinessDto {
     private String name;
     private String email;
     private String username;
@@ -16,9 +11,4 @@ public class BusinessDto {
     private String address;
     private String logo;
     private String website;
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
-
 }

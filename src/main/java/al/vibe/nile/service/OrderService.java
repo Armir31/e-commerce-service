@@ -2,6 +2,7 @@ package al.vibe.nile.service;
 
 import al.vibe.nile.entity.Order;
 import al.vibe.nile.repository.OrderRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class OrderService {
         return repository
                 .findById(id)
                 .orElseThrow(
-                        ()->new RuntimeException
+                        ()->new EntityNotFoundException
                                 ("Order" + id + "not found"));
 
     }
