@@ -21,25 +21,21 @@ public class CategoryService {
 
     private ModelMapper modelMapper = new ModelMapper();
 
-    public CategoryService(CategoryRepository categoryRepository){
-        this.repository = categoryRepository;
-    }
     public List<Category> getList(){
         return(repository.findAll());
     }
-    public void create(CreateCategoryDto createCategoryDto){
+    public Category create(CreateCategoryDto createCategoryDto){
         Category category = modelMapper.map(createCategoryDto, Category.class);
-        repository.save(category);
+        return repository.save(category);
     }
     public void delete(Long id){
         repository.deleteById(id);
     }
-    public void update(Long id, CreateCategoryDto updateCategoryDto){
+    public Category update(Long id, CreateCategoryDto updateCategoryDto){
         Category existingCategory = getById(id);
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(updateCategoryDto, existingCategory);
-        repository.saveAndFlush(existingCategory);
-
+        return repository.saveAndFlush(existingCategory);
     }
     public Category getById(Long id){
         return repository

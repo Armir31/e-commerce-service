@@ -25,30 +25,26 @@ public class CostumerService {
 
     private ModelMapper modelMapper = new ModelMapper();
 
-    public CostumerService(CostumerRepository costumerRepository) {
-        this.repository = costumerRepository;
-    }
-    @Transactional
     public List<Costumer> getList(){
         return(repository.findAll());
     }
-    @Transactional
+
     public Costumer getById(Long id)  {
         return repository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Costumer "
                                 + id + " not found"));
     }
-    @Transactional
+
     public Costumer create(CreateCostumerDto createCostumerDto) {
         Costumer costumer = modelMapper.map(createCostumerDto, Costumer.class);
         return repository.save(costumer);
     }
-    @Transactional
+
     public void delete(Long id) {
         repository.deleteById(id);
     }
-    @Transactional
+
     public Costumer update(CreateCostumerDto createCostumerDto, Long id) {
         Costumer existingCostumer = getById(id);
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());

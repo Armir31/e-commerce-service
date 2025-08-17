@@ -1,12 +1,10 @@
 package al.vibe.nile.service;
 
 import al.vibe.nile.dto.CreateProductDto;
-import al.vibe.nile.entity.Business;
 import al.vibe.nile.entity.Category;
 import al.vibe.nile.entity.Product;
 import al.vibe.nile.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProductService {
