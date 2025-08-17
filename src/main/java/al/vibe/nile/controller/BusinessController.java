@@ -43,7 +43,7 @@ private BusinessService businessService;
     public ResponseEntity<List<Business>> getList(){
          return ResponseEntity.ok(businessService.getList());
     }
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<BusinessDto> getById(@PathVariable Long id){
         Business business = businessService.getById(id);
         return new ResponseEntity<>(modelMapper.map(business, BusinessDto.class), HttpStatus.OK);

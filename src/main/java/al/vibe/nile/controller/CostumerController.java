@@ -1,8 +1,10 @@
 package al.vibe.nile.controller;
 
+import al.vibe.nile.dto.CostumerDto;
+import al.vibe.nile.dto.CreateCostumerDto;
 import al.vibe.nile.entity.Costumer;
 import al.vibe.nile.service.CostumerService;
-import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/costumer")
@@ -29,43 +29,27 @@ public class CostumerController {
     @Autowired
     private CostumerService costumerService;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @PostMapping
-    public ResponseEntity<Costumer> createCostumer(Costumer costumer) {
-        try{
-            Costumer createdCostumer = costumerService.create(costumer);
-            Long id = createdCostumer.getId();
-            URI costumerUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(id)
-                    .toUri();
-            return ResponseEntity.created(costumerUri)
-                    .build();
-        }catch (RuntimeException e){
-            return ResponseEntity.internalServerError()
-                    .build();
-        }
+    public ResponseEntity<CostumerDto> createCostumer(@RequestBody CreateCostumerDto createCostumerDto) {
+        log.info("Creating costumer");
+        Costumer costumer = this.costumerService.create(createCostumerDto);
+        return new ResponseEntity<>(modelMapper.map(costumer, CostumerDto.class), HttpStatus.CREATED);
     }
     @GetMapping
-    public ResponseEntity<Set<Costumer>> getList(){
+    public ResponseEntity<List<Costumer>>getList(){
         return ResponseEntity.ok(costumerService.getList());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id){
-        try{
-            return ResponseEntity.ok(costumerService.getById(id));
-        }catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound()
-                    .build();
-        }catch (RuntimeException e){
-            return ResponseEntity.internalServerError()
-                    .build();
-        }
+    public ResponseEntity<CostumerDto> getById(@PathVariable Long id){
+        Costumer costumer = costumerService.getById(id);
+        return new ResponseEntity<>(modelMapper.map(costumer, CostumerDto.class), HttpStatus.OK);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<Costumer> update (@PathVariable Long id,
-                                            @RequestBody Costumer costumer){
-        Costumer saved = costumerService.update(costumer);
-        return new ResponseEntity<>(saved,HttpStatus.OK);
+    public ResponseEntity<CostumerDto> updateCostumer(@PathVariable Long id, @RequestBody CreateCostumerDto updateCostumerDto){
+        Costumer saved = costumerService.update(updateCostumerDto, id);
+        return new ResponseEntity<>(modelMapper.map(saved, CostumerDto.class), HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){

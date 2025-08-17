@@ -1,7 +1,9 @@
 package al.vibe.nile.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class CreateBusinessDto {
     private String name;
     private String email;

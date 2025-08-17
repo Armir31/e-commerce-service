@@ -9,10 +9,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
-public class OrderDto {
-    private Long id;
+public class CreateOrderDto {
     @JsonProperty("order_number")
     private String orderNumber;
     @JsonProperty("order_date")
@@ -25,8 +23,4 @@ public class OrderDto {
     private Payment paymentMethod;
     private List<Product> items;
     private Costumer costumer;
-    @JsonProperty("created_at")
-    private String createdAt;
-    @JsonProperty("updated_at")
-    private String updatedAt;
 }
