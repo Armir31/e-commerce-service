@@ -13,6 +13,14 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 public class Costumer {
+
+    public Costumer(Long id) {
+        this.id = id;
+    }
+
+    public Costumer() {
+
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
