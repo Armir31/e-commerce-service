@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,13 +31,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "order_number", nullable = false, unique = true)
-    private String orderNumber;
-
-    @Timestamp
-    @Column(name = "order_date", nullable = false, updatable = false)
-    private LocalDateTime orderDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
@@ -53,9 +47,9 @@ public class Order {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "payment_method", nullable = false)
-    private Payment paymentMethod;
-    @ManyToOne
     @JoinColumn(name = "costumer", nullable = false)
     private Costumer costumer;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<OrderItem> orderItems = new ArrayList<>();
 }
