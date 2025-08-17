@@ -4,7 +4,6 @@ import al.vibe.nile.dto.CreateBusinessDto;
 import al.vibe.nile.entity.Business;
 import al.vibe.nile.repository.BusinessRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class BusinessService {
@@ -28,27 +26,22 @@ public class BusinessService {
         this.repository = businessRepository;
     }
 
-    @Transactional
     public List<Business> getList(){
         return repository.findAll();
     }
-    @Transactional
     public Business create(CreateBusinessDto createBusinessDto){
         Business business = modelMapper.map(createBusinessDto, Business.class);
        return repository.save(business);
     }
-    @Transactional
     public void delete(Long id){
         repository.deleteById(id);
     }
-    @Transactional
     public Business update(Long id, CreateBusinessDto updateBusinessDto){
         Business existingBusiness = getById(id);
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(updateBusinessDto, existingBusiness);
         return repository.save(existingBusiness);
     }
-    @Transactional
     public Business getById(Long id){
         return repository
                 .findById(id)
