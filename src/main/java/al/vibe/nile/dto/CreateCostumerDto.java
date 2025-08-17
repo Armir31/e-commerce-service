@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class CostumerDto {
-    private Long id;
+public class CreateCostumerDto {
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -15,8 +14,4 @@ public class CostumerDto {
     @JsonProperty("phone_number")
     private String phoneNumber;
     private String address;
-    @JsonProperty("created_at")
-    private String createdAt;
-    @JsonProperty("updated_at")
-    private String updatedAt;
 }

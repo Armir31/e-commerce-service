@@ -2,6 +2,7 @@ package al.vibe.nile.service;
 
 import al.vibe.nile.dto.CreateProductDto;
 import al.vibe.nile.entity.Business;
+import al.vibe.nile.entity.Category;
 import al.vibe.nile.entity.Product;
 import al.vibe.nile.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,23 +25,25 @@ public class ProductService {
 
     private ModelMapper modelMapper = new ModelMapper();
 
-    public ProductService(ProductRepository productRepository) {
-        this.repository = productRepository;
+    public ProductService() {
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
     }
-    @Transactional
+
     public List<Product> getList(){
         return(repository.findAll());
     }
-    @Transactional
+
     public Product create(CreateProductDto createProductDto) {
             Product product = modelMapper.map(createProductDto, Product.class);
+            product.setId(null);
+            product.setCategory(new Category(createProductDto.getCategoryId()));
             return repository.save(product);
     }
-    @Transactional
+
     public void delete(Long id){
         repository.deleteById(id);
     }
-    @Transactional
+
     public Product update(Long id, CreateProductDto updateProductDto){
         Product existingProduct = getById(id);
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
