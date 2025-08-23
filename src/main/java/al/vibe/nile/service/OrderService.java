@@ -2,6 +2,7 @@ package al.vibe.nile.service;
 
 import al.vibe.nile.dto.CreateOrderDto;
 import al.vibe.nile.dto.CreateOrderItemDto;
+import al.vibe.nile.entity.Business;
 import al.vibe.nile.entity.Costumer;
 import al.vibe.nile.entity.Order;
 import al.vibe.nile.entity.OrderItem;
@@ -11,7 +12,6 @@ import al.vibe.nile.repository.OrderItemRepository;
 import al.vibe.nile.repository.OrderRepository;
 import al.vibe.nile.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +74,8 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(orderItemDto.getProductId());
             orderItem.setPrice(priceMap.get(orderItemDto.getProductId()));
-            orderItem.setSubTotal(orderItem.getPrice() * orderItemDto.getQunatity());
-            orderItem.setQuantity(orderItemDto.getQunatity());
+            orderItem.setSubTotal(orderItem.getPrice() * orderItemDto.getQuantity());
+            orderItem.setQuantity(orderItemDto.getQuantity());
             orderItem.setOrder(savedOrder);
             total+=orderItem.getSubTotal();
             orderItemRepository.save(orderItem);
@@ -93,9 +93,47 @@ public class OrderService {
     }
 
     public Order update(Long id, CreateOrderDto updateOrderDto){
-        Order existingOrder = getById(id);
-        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        modelMapper.map(updateOrderDto, existingOrder);
+        Order existingOrder = repository.findById(id)
+                .orElseThrow(
+                        ()-> new EntityNotFoundException
+                                ("Order with id: " + id + " not found"));
+
+        if (existingOrder.getOrderStatus() != OrderStatus.PROCESSING){
+            throw new IllegalStateException("Order with id: " + id + " is not in PROCESSING status");
+        }
+        orderItemRepository.deleteAll(existingOrder.getOrderItems());
+        existingOrder.getOrderItems().clear();
+        Set<Long> ids = updateOrderDto.getOrderItems().stream()
+                        .map(CreateOrderItemDto::getProductId)
+                                .collect(Collectors.toSet());
+        List<Product> products = this.productRepository.findAllById(ids);
+        Map<Long, Double> priceMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, Product::getPrice));
+
+        Double total = 0D;
+        for (CreateOrderItemDto orderItemDto: updateOrderDto.getOrderItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId(orderItemDto.getProductId());
+            orderItem.setPrice(priceMap.get(orderItemDto.getProductId()));
+            orderItem.setSubTotal(orderItem.getPrice() * orderItemDto.getQuantity());
+            orderItem.setQuantity(orderItemDto.getQuantity());
+            orderItem.setOrder(existingOrder);
+            total+=orderItem.getSubTotal();
+            orderItemRepository.save(orderItem);
+        }
+        existingOrder.setTotalAmount(total);
+        existingOrder.setOrderItems(null);
         return repository.save(existingOrder);
+    }
+    public List<Order> findOrdersByCostumer(Long costumerId){
+        Costumer costumer = new Costumer();
+        return repository.findOrdersByCostumer(costumer);
+    }
+    public List<Order> findOrdersByBusiness(Long businessId){
+        Business business = new Business();
+        return repository.findOrdersByBusiness(business);
+    }
+    public List<Order> findOrdersByOrderStatus(OrderStatus orderStatus){
+        return repository.findOrdersByOrderStatus(orderStatus);
     }
 }

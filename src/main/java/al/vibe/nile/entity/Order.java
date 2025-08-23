@@ -50,6 +50,10 @@ public class Order {
     @JoinColumn(name = "costumer", nullable = false)
     private Costumer costumer;
 
+    @ManyToOne
+    @JoinColumn(name = "business", nullable = false)
+    private Business business;
+
     @OneToMany(fetch = FetchType.EAGER)
     private List<OrderItem> orderItems = new ArrayList<>();
 }
