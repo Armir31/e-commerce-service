@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/costumer")
+@RequestMapping("/api/costumer")
 public class CostumerController {
     public static final Logger log = LoggerFactory.getLogger(CostumerController.class);
 

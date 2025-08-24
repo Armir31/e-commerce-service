@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jdk.jfr.Timestamp;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,10 +33,10 @@ public class Category {
     private String name;
     @Column(name = "description", nullable = false)
     private String description;
-    @Timestamp
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-    @Timestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
