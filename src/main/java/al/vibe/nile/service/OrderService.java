@@ -16,6 +16,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -127,13 +131,20 @@ public class OrderService {
     }
     public List<Order> findOrdersByCostumer(Long costumerId){
         Costumer costumer = new Costumer();
+        costumer.setId(costumerId);
         return repository.findOrdersByCostumer(costumer);
     }
-    public List<Order> findOrdersByBusiness(Long businessId){
+    public Page<Order> findOrdersByBusiness(Long businessId, Integer size, Integer page, String sort, Sort.Direction direction){
         Business business = new Business();
-        return repository.findOrdersByBusiness(business);
+        business.setId(businessId);
+        Sort sortBy = Sort.by(direction, sort);
+        Pageable pageable = PageRequest.of(page, size, sortBy);
+        return repository.findOrdersByBusiness(business, pageable);
     }
-    public List<Order> findOrdersByOrderStatus(OrderStatus orderStatus){
-        return repository.findOrdersByOrderStatus(orderStatus);
+    public Page<Order> findOrdersByOrderStatus(OrderStatus orderStatus, Integer size, Integer page, String sort, Sort.Direction direction
+    ){
+        Sort sortBy = Sort.by(direction, sort);
+        Pageable pageable = PageRequest.of(page, size, sortBy);
+        return repository.findOrdersByOrderStatus(orderStatus, pageable);
     }
 }

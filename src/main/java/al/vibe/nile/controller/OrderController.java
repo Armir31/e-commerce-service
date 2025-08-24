@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -63,11 +66,21 @@ public class OrderController {
         return new ResponseEntity<>(orderService.findOrdersByCostumer(costumerId), HttpStatus.OK);
     }
     @GetMapping("/business/{id}")
-    public ResponseEntity<List<Order>> getOrdersByBusiness(@PathVariable Long businessId) {
-        return new ResponseEntity<>(orderService.findOrdersByBusiness(businessId), HttpStatus.OK);
+    public ResponseEntity<Page<Order>> getOrdersByBusiness(
+            @PathVariable("id") Long businessId,
+            @RequestParam(value = "limit", defaultValue = "10", required = true) int limit,
+            @RequestParam(value = "page", defaultValue = "0", required = true) int page,
+            @RequestParam(value = "sort_by", defaultValue = "created_at", required = true) String sortBy,
+            @RequestParam(value = "direction", defaultValue = "desc", required = true) Sort.Direction direction) {
+        return new ResponseEntity<>(orderService.findOrdersByBusiness(businessId, limit, page, sortBy, direction), HttpStatus.OK);
     }
-    @GetMapping("/{status}")
-    public ResponseEntity<List<Order>> getOrdersByOrderStatus (@PathVariable OrderStatus orderStatus) {
-        return new ResponseEntity<>(orderService.findOrdersByOrderStatus(orderStatus), HttpStatus.OK);
+    @GetMapping("/filter/{status}")
+    public ResponseEntity<Page<Order>> getOrdersByOrderStatus (
+            @PathVariable ("status") OrderStatus orderStatus,
+            @RequestParam(value = "limit", defaultValue = "10", required = true) int limit,
+            @RequestParam(value = "page", defaultValue = "0", required = true) int page,
+            @RequestParam(value = "sort_by", defaultValue = "created_at", required = true) String sort_by,
+            @RequestParam(value = "direction", defaultValue = "desc", required = true) Sort.Direction direction) {
+        return new ResponseEntity<>(orderService.findOrdersByOrderStatus(orderStatus, limit, page, sort_by, direction), HttpStatus.OK);
     }
 }
