@@ -15,6 +15,12 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Business {
+
+    public Business(Long id) {
+        this.id = id;
+    }
+    public Business() {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -28,7 +34,7 @@ public class Business {
     private String phoneNumber;
     @Column(name = "address", nullable = false, unique = true)
     private String address;
-    @Column(name = "logo", nullable = false, unique = true)
+    @Column(name = "logo", nullable = false)
     private String logo;
     @Column(name = "website", unique = true)
     private String website;

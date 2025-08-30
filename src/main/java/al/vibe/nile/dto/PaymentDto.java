@@ -25,5 +25,6 @@ public class PaymentDto {
     private String transactionId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long costumerId;
 
 }

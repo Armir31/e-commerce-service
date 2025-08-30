@@ -11,6 +11,8 @@ public class ProductDto {
     private String image;
     private String price;
     private Integer quantity;
+    private Long categoryId;
+    private Long businessId;
     @JsonProperty("created_at")
     private String createdAt;
     @JsonProperty("updated_at")

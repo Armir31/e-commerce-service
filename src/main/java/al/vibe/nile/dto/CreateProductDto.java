@@ -10,4 +10,5 @@ public class CreateProductDto {
     private String price;
     private Integer quantity;
     private Long categoryId;
+    private Long businessId;
 }

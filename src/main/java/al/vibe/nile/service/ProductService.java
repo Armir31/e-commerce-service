@@ -1,8 +1,11 @@
 package al.vibe.nile.service;
 
 import al.vibe.nile.dto.CreateProductDto;
+import al.vibe.nile.entity.Business;
 import al.vibe.nile.entity.Category;
 import al.vibe.nile.entity.Product;
+import al.vibe.nile.repository.BusinessRepository;
+import al.vibe.nile.repository.CategoryRepository;
 import al.vibe.nile.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.Conditions;
@@ -20,6 +23,12 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private BusinessRepository businessRepository;
+
     private ModelMapper modelMapper = new ModelMapper();
 
     public ProductService() {
@@ -34,6 +43,9 @@ public class ProductService {
             Product product = modelMapper.map(createProductDto, Product.class);
             product.setId(null);
             product.setCategory(new Category(createProductDto.getCategoryId()));
+        Business business = businessRepository.findById(createProductDto.getBusinessId())
+                .orElseThrow(() -> new RuntimeException("Business not found"));
+        product.setBusiness(business);
             return repository.save(product);
     }
 
@@ -45,6 +57,12 @@ public class ProductService {
         Product existingProduct = getById(id);
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(updateProductDto, existingProduct);
+        if (updateProductDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(updateProductDto.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+            existingProduct.setCategory(category);
+        }
+        existingProduct.setId(id);
         return repository.save(existingProduct);
     }
     public Product getById(Long id){

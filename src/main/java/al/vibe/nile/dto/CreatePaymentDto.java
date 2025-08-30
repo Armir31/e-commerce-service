@@ -13,4 +13,5 @@ public class CreatePaymentDto {
     private PaymentMethod paymentMethod;
     private PaymentStatus paymentStatus;
     private String transactionId;
+    private Long customerId;
 }

@@ -2,6 +2,7 @@ package al.vibe.nile.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jdk.jfr.Timestamp;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,11 @@ public class Product {
     private Double price;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "business_id", nullable = false)
+    private Business business;
+
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

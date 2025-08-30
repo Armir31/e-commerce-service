@@ -4,10 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jdk.jfr.Timestamp;
 import lombok.Data;
@@ -34,7 +36,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus;
-    @Column(name = "transaction_id", nullable = false, unique = true)
+    @Column(name = "transaction_id", nullable = true, unique = false)
     private String transactionId;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -42,4 +44,8 @@ public class Payment {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "costumer_id")
+    private Costumer costumer;
+
 }
