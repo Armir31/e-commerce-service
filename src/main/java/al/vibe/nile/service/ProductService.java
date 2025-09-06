@@ -40,13 +40,24 @@ public class ProductService {
     }
 
     public Product create(CreateProductDto createProductDto) {
-            Product product = modelMapper.map(createProductDto, Product.class);
+            Product product = new Product();
             product.setId(null);
-            product.setCategory(new Category(createProductDto.getCategoryId()));
+        if (createProductDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(createProductDto.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+            product.setCategory(category);
+        }
         Business business = businessRepository.findById(createProductDto.getBusinessId())
                 .orElseThrow(() -> new RuntimeException("Business not found"));
         product.setBusiness(business);
-            return repository.save(product);
+
+        product.setImage(createProductDto.getImage());
+        product.setName(createProductDto.getName());
+        product.setDescription(createProductDto.getDescription());
+        product.setPrice(createProductDto.getPrice());
+        product.setQuantity(createProductDto.getQuantity());
+
+        return repository.save(product);
     }
 
     public void delete(Long id){
@@ -55,14 +66,21 @@ public class ProductService {
 
     public Product update(Long id, CreateProductDto updateProductDto){
         Product existingProduct = getById(id);
-        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        modelMapper.map(updateProductDto, existingProduct);
         if (updateProductDto.getCategoryId() != null) {
             Category category = categoryRepository.findById(updateProductDto.getCategoryId())
                     .orElseThrow(() -> new EntityNotFoundException("Category not found"));
             existingProduct.setCategory(category);
         }
-        existingProduct.setId(id);
+        Business business = businessRepository.findById(updateProductDto.getBusinessId())
+                .orElseThrow(() -> new RuntimeException("Business not found"));
+        existingProduct.setBusiness(business);
+
+        existingProduct.setImage(existingProduct.getImage());
+        existingProduct.setName(existingProduct.getName());
+        existingProduct.setDescription(existingProduct.getDescription());
+        existingProduct.setPrice(existingProduct.getPrice());
+        existingProduct.setQuantity(existingProduct.getQuantity());
+
         return repository.save(existingProduct);
     }
     public Product getById(Long id){

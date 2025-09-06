@@ -7,7 +7,7 @@ public class CreateProductDto {
     private String name;
     private String description;
     private String image;
-    private String price;
+    private Double price;
     private Integer quantity;
     private Long categoryId;
     private Long businessId;
